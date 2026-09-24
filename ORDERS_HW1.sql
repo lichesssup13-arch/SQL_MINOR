@@ -1,4 +1,3 @@
-
 CREATE TABLE Costomer (
     costomer_nicname VARCHAR(100),
     customer_city VARCHAR(50),
