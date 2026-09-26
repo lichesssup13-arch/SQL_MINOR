@@ -1,5 +1,5 @@
 theory/
 *.db
 *.txt
-*.sqlbpro
+*.sqbpro
 *.db-journal
