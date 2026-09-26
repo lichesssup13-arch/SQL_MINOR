@@ -1,1 +1,5 @@
-not_for_git/
+theory/
+*.db
+*.txt
+*.sqlbpro
+*.db-journal
