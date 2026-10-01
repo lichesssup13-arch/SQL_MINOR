@@ -1,8 +1,29 @@
+CREATE TABLE Products (
+    product_id INT,
+    product VARCHAR(50),
+    PRIMARY KEY (product_id));
 CREATE TABLE Costomer (
     costomer_nicname VARCHAR(100),
     customer_city VARCHAR(50),
     PRIMARY KEY (costomer_nicname)
 );
+
+CREATE TABLE Costomer_Orders (
+    order_id INT,
+    costomer_nicname VARCHAR(100),
+    PRIMARY KEY (order_id),
+    FOREIGN KEY (costomer_nicname) REFERENCES Costomer(costomer_nicname)
+);
+
+CREATE TABLE Orders_products (
+    order_id INT,
+    product_id INT,
+    quantity INT,
+    PRIMARY KEY (order_id, product_id),
+    FOREIGN KEY (order_id) REFERENCES Costomer_Orders(order_id),
+    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+);
+
 
 INSERT INTO Costomer (costomer_nicname, customer_city) VALUES
 ('anna_sidorova',  'Санкт-Петербург'),
@@ -213,11 +234,6 @@ INSERT INTO Costomer (costomer_nicname, customer_city) VALUES
 ('nikolay_prokhorov', 'Омск'),
 ('anna_prokhorova', 'Ростов-на-Дону');
 
-CREATE TABLE Products (
-    product_id INT,
-    product VARCHAR(50),
-    PRIMARY KEY (product_id));
-
 INSERT INTO Products (product_id, product) VALUES
 (17, 'Масло'),(18, 'Молоко'),(19, 'Сыр'),(20, 'Хлеб');
 
@@ -231,13 +247,6 @@ INSERT INTO Products (product_id, product) VALUES
 (40, 'Чай чёрный'),(41, 'Кофе молотый'),(42, 'Картофель'),(43, 'Морковь'),
 (44, 'Лук репчатый'),(45, 'Капуста белокочанная'),(46, 'Помидоры'),
 (47, 'Огурцы'),(48, 'Яблоки'),(49, 'Бананы'),(50, 'Апельсины');
-
-CREATE TABLE Costomer_Orders (
-    order_id INT,
-    costomer_nicname VARCHAR(100),
-    PRIMARY KEY (order_id),
-    FOREIGN KEY (costomer_nicname) REFERENCES Costomer(costomer_nicname)
-);
 
 INSERT INTO Costomer_Orders (order_id, costomer_nicname) VALUES
 (10001, 'ivan_petrov'),
@@ -264,7 +273,9 @@ INSERT INTO Costomer_Orders (order_id, costomer_nicname) VALUES
 (10056, 'maria_egorova'),(10057, 'nikolay_pavlov'),(10058, 'elena_pavlova'),
 (10059, 'alexey_kozlov'),(10060, 'anna_kozlova'),(10061, 'nikolay_stepanov'),
 (10062, 'maria_stepanova'),(10063, 'alexey_nikolaev'),(10064, 'elena_nikolaeva'),
-(10065, 'nikolay_orlov'),(10066, 'anna_orlova'),(10067, 'alexey_andreev'),
+(10065, 'nikolay_orlov'),
+(10066, 'anna_orlova'),
+(10067, 'alexey_andreev'),
 (10068, 'maria_andreeva'),
 (10069, 'nikolay_makarov'),
 (10070, 'elena_makarova'),
@@ -420,15 +431,6 @@ INSERT INTO Costomer_Orders (order_id, costomer_nicname) VALUES
 (10220, 'elena_kudryavtseva'),
 (10221, 'nikolay_prokhorov'),
 (10222, 'anna_prokhorova');
-
-CREATE TABLE Orders_products (
-    order_id INT,
-    product_id INT,
-    quantity INT,
-    PRIMARY KEY (order_id, product_id),
-    FOREIGN KEY (order_id) REFERENCES Costomer_Orders(order_id),
-    FOREIGN KEY (product_id) REFERENCES Products(product_id)
-);
 
 INSERT INTO Orders_products (order_id, product_id, quantity) VALUES
 (10001, 18, 2), (10001, 20, 1),
@@ -648,4 +650,40 @@ ALTER TABLE Products RENAME COLUMN product to product_name;
 ALTER TABLE Costomer ADD birth_date DATE; 
 UPDATE Costomer
 SET birth_date = date('now', '-' || (abs(random() % 15000) + 6570) || ' days');
+ALTER TABLE Costomer RENAME TO Customer;
+ALTER TABLE Costomer_Orders RENAME TO Customer_orders;
+
+SELECT co.costomer_nicname ,op.order_id, p.product_name 
+FROM Orders_products op
+INNER JOIN Costomer_Orders co
+USING (order_id)
+INNER JOIN Products p
+USING (product_id);
+
+ALTER TABLE Customer 
+RENAME COLUMN costomer_nicname TO customer_nicname;
+ALTER TABLE Customer_orders 
+RENAME COLUMN costomer_nicname TO customer_nicname;
+
+SELECT c.customer_nicname, COUNT(co.order_id) AS Number_of_Orders
+FROM Customer c
+LEFT JOIN Customer_Orders co
+USING (customer_nicname)
+GROUP BY c.customer_nicname
+ORDER BY Number_of_Orders DESC
+LIMIT 10;
+
+SELECT co.customer_nicname
+FROM Customer_orders co
+INNER JOIN 
+
+SELECT 
+co.customer_nicname AS Имя_покупятеля,
+p.product_name AS Название_продукта,
+op.quantity AS количество
+FROM Orders_products op
+INNER JOIN Customer_orders co USING (order_id)
+INNER JOIN Products p USING (product_id);
+WHERE op.product_id = 19 AND op.quantity = 2;
+
 
