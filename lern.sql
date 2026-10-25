@@ -59,3 +59,19 @@ SELECT * FROM Car ORDER BY Markekey, Year DESC;
 SELECT * FROM Car where year BETWEEN 2003 and 2005;
 SELECT * FROM Car where ColorKey =1 or ColorKey =3;
 SELECT distinct MarkeKey, year FROM Car;
+
+SELECT m.MarkeKey, m.Marke, COUNT(*) qty
+FROM Car c JOIN Marke m ON c.MarkeKey = m.MarkeKey
+GROUP BY m.MarkeKey, m.Marke 
+HAVING COUNT(*) > 0
+ORDER BY qty DESC;
+
+SELECT COUNT(*) AS all_cars
+FROM Car;
+
+SELECT 
+    m.Marke AS Производитель,
+    COUNT(c.CarKey) AS Количество_машин
+FROM Marke m
+LEFT JOIN Car c ON m.MarkeKey = c.MarkeKey
+GROUP BY m.MarkeKey, m.Marke;

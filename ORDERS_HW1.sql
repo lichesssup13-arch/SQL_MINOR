@@ -686,4 +686,20 @@ INNER JOIN Customer_orders co USING (order_id)
 INNER JOIN Products p USING (product_id);
 WHERE op.product_id = 19 AND op.quantity = 2;
 
+SELECT AVG(quantity)AS  avg_q
+FROM Orders_products;
 
+SELECT customer_city, COUNT(*) AS cust_num
+ FROM Customer
+GROUP BY customer_city
+HAVING cust_num >= 21;
+
+SELECT p.product_name, COUNT(*) AS ord_num
+ FROM Orders_products op
+ RIGHT JOIN Products p
+ USING (product_id)
+WHERE product_id >=18 AND product_id < 20
+GROUP BY p.product_id;
+ 
+ 
+ 
